@@ -1,0 +1,20 @@
+package ui
+
+import ui "github.com/EduardValentin/course-platform/ui/layouts"
+
+templ Hello() {
+	@ui.RootLayout() {
+		@counts()
+	}
+}
+
+templ counts() {
+	<div hx-target="this" hx-swap="outerHTML">
+		<div><label class="text-red-200">First Name</label>: Joe</div>
+		<div><label>Last Name</label>: Blow</div>
+		<div><label>Email</label>: joe@blow.com</div>
+		<button hx-get="/contact/1/edit" class="btn primary">
+			Click To Edit
+		</button>
+	</div>
+}
