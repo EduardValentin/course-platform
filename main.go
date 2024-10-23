@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
+	"github.com/EduardValentin/course-platform/renderer"
 	"github.com/EduardValentin/course-platform/ui"
 	"github.com/EduardValentin/course-platform/utils"
 	"github.com/a-h/templ"
+	"github.com/gin-gonic/gin"
 )
 
 var dev = true
@@ -33,15 +34,33 @@ func withNonce(next http.Handler) http.Handler {
 }
 
 func main() {
-	mux := http.NewServeMux()
-	mux.Handle("/styles/", disableCacheInDevMode(http.StripPrefix("/styles/", http.FileServer(http.Dir("ui/styles")))))
+	r := gin.Default()
+	r.LoadHTMLGlob("ui/**/*.templ")
 
-	mux.Handle("/", templ.Handler(ui.Hello()))
+	ginHtmlRenderer := r.HTMLRender
+	r.HTMLRender = &renderer.HTMLTemplRenderer{FallbackHtmlRenderer: ginHtmlRenderer}
 
-	withNonceMux := withNonce(mux)
+	// Disable trusted proxy warning.
+	r.SetTrustedProxies(nil)
 
-	fmt.Println("Listening on :3000")
-	if err := http.ListenAndServe(":3000", withNonceMux); err != nil {
-		log.Printf("error listening: %v", err)
-	}
+	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "", ui.Hello())
+	})
+
+	r.GET("/with-ctx", func(c *gin.Context) {
+		r := renderer.New(c.Request.Context(), http.StatusOK, ui.Hello())
+		c.Render(http.StatusOK, r)
+	})
+
+	r.Run(":8080") //
+	// mux := http.NewServeMux()
+	// mux.Handle("/styles/", disableCacheInDevMode(http.StripPrefix("/styles/", http.FileServer(http.Dir("ui/styles")))))
+	//
+	// mux.Handle("/", templ.Handler(ui.Hello()))
+	//
+	// withNonceMux := withNonce(mux)
+	//
+	// if err := http.ListenAndServe(":3000", withNonceMux); err != nil {
+	// 	log.Printf("error listening: %v", err)
+	// }
 }
