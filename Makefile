@@ -2,7 +2,7 @@
 # re-create _templ.txt files on change, then send reload event to browser. 
 # Default url: http://localhost:7331
 live/templ:
-	templ generate --watch --proxy="http://localhost:3000" --open-browser=true -v
+	templ generate --watch --proxy="http://localhost:8080" --open-browser=true -v
 
 # run air to detect any go file changes to re-build and re-run the server.
 live/server:
@@ -10,12 +10,12 @@ live/server:
 	--build.cmd "go build -o tmp/bin/main" --build.bin "tmp/bin/main" --build.delay "100" \
 	--build.exclude_dir "node_modules" \
 	--build.include_ext "go" \
-	--build.stop_on_error "false" \
+	--build.stop_on_error "true" \
 	--misc.clean_on_exit true
 
 # run tailwindcss to generate the styles.css bundle in watch mode.
 live/tailwind:
-	npx tailwindcss -i ./ui/styles/input.css -o ./ui/styles/output.css --minify --watch
+	npx tailwindcss -i ./assets/input.css -o ./assets/output.css --minify --watch
 
 # watch for any js or css change in the assets/ folder, then reload the browser via templ proxy.
 live/sync_assets:

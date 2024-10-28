@@ -1,0 +1,13 @@
+package dashboard
+
+import "github.com/EduardValentin/course-platform/layout"
+
+templ Dashboard() {
+	@layout.Root() {
+		<div>
+			<div>Course Progress:</div>
+			<div>You reached chapter 2 out of 6</div>
+			<a href="/courses/programming-fundamentals">Get back in</a>
+		</div>
+	}
+}
