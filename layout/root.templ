@@ -1,0 +1,36 @@
+package layout 
+
+templ Root() {
+	<html>
+		<head>
+			<script src="https://unpkg.com/htmx.org@2.0.3" integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq" crossorigin="anonymous" nonce={ templ.GetNonce(ctx) }></script>
+			<link href="/assets/output.css" rel="stylesheet"/>
+		</head>
+		<body>
+			<nav>
+				<ul class="flex justify-center gap-5">
+					@homeLink()
+					<li><a href="/blog">Blog</a></li>
+					@loginLink()
+				</ul>
+			</nav>
+			{ children... }
+		</body>
+	</html>
+}
+
+templ loginLink() {
+	if ctx.Value("authenticated") == nil {
+		<li><a href="/login">Login</a></li>
+	} else {
+		<li><a href="/logout">Logout</a></li>
+	}
+}
+
+templ homeLink() {
+	if ctx.Value("authenticated") == nil {
+		<li><a href="/">Course</a></li>
+	} else {
+		<li><a href="/dashboard">Dashboard</a></li>
+	}
+}

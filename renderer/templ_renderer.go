@@ -2,10 +2,9 @@ package renderer
 
 import (
 	"context"
+	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin/render"
 	"net/http"
-
-	"github.com/a-h/templ"
 )
 
 var Default = &HTMLTemplRenderer{}
